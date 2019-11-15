@@ -1,7 +1,7 @@
 CC = g++
 CFLAGS = -I.
 
-DEPS = ray.h,vec3.h
+DEPS = ray.h,vec3.h,hittable.h,sphere.h
 
 %.o: %.c $(DEPS)
 		$(CC) -c -o $@ $< $(CFLAGS)
