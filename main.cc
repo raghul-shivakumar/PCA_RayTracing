@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include <stdlib.h>
 #include "sphere.h"
 #include "hittable_list.h"
@@ -72,9 +73,18 @@ hittable *random_scene()
 
     return new hittable_list(list,i);
 }
-int main()
+int main(int argc, char* argv[])
 {
-    int nx = 400, ny = 200, ns = 100, ir, ig, ib;
+    int nx, ny, ns, ir, ig, ib;
+    if(argc < 4){
+      std::cout<<"Enter the values for nx, ny and ns\n";
+      return(0);
+    }
+    nx = atoi(argv[1]);
+    ny = atoi(argv[2]);
+    ns = atoi(argv[3]);
+    FILE* fp;
+    fp = fopen("output.ppm","wb");
     float r, g, b;
     hittable *list[2];
     //list[0] = new sphere(vec3(-R, 0, -1), R, new lambertian(vec3(0, 0, 1)));
@@ -87,8 +97,11 @@ int main()
     float dist_to_focus = 10.0;
     float aperture = 0.1;
     camera cam(lookfrom, lookat, vec3(0, 1, 0), 20, float(nx) / float(ny), aperture, dist_to_focus);
-    std::cout << "P3\n"
-              << nx << " " << ny << "\n255\n";
+    fprintf(fp,"P3\n");
+   // std::cout << "P3\n"
+              //<< nx << " " << ny << "\n255\n";
+    fprintf(fp,"%d %d\n",nx,ny);
+    fprintf(fp,"255\n");
     for (int j = ny - 1; j >= 0; j--)
         for (int i = 0; i < nx; i++)
         {
@@ -106,7 +119,9 @@ int main()
             ir = int(255.99 * col[0]);
             ig = int(255.99 * col[1]);
             ib = int(255.99 * col[2]);
-            std::cout << ir << " " << ig << " " << ib << "\n";
+            //std::cout << ir << " " << ig << " " << ib << "\n";
+            fprintf(fp,"%d %d %d\n",ir,ig,ib);
         }
+      fclose(fp);
     return 0;
 }
